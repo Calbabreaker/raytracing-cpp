@@ -1,10 +1,14 @@
 # CPU Raytracing
 
-Does raycasting on the CPU and outputs and image.
+Does raycasting on the CPU and outputs an image.
 
 ## Building
 
-### Unix
+Make sure to clone the repository recursively to get the submodules:
+
+```
+git clone https://github.com/Calbabreaker/raytracing --recursive --shallow-submodules
+```
 
 ### Unix
 
