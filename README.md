@@ -20,9 +20,9 @@ This will compile and run the code:
 make run
 ```
 
-You can set BUILD_TYPE to build as release:
+By default it will compile in Release but you can compile it in Debug like this:
 
 ```sh
 make clean # clean first
-make run BUILD_TYPE=Release
+make run BUILD_TYPE=Debug
 ```

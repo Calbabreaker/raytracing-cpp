@@ -33,7 +33,7 @@ bool SceneSphere::ray_cast(const Ray& ray, float dist_min, float dist_max, HitIn
 
 // TODO use cli arguments
 Scene::Scene()
-    : m_width(640), m_height(360), m_samples_per_pixel(16), m_max_bounces(50),
+    : m_width(640), m_height(360), m_samples_per_pixel(16), m_max_bounces(32),
       m_camera(float(m_width) / float(m_height), 1.0f), m_image_filename("output.ppm")
 {
     m_image_file = fopen(m_image_filename, "w");
@@ -58,8 +58,8 @@ bool Scene::ray_cast(const Ray& ray, float dist_min, float dist_max, HitInfo& in
     return closest_dist != dist_max;
 }
 
-constexpr glm::vec3 SKYBOX_COLOR_TOP = {0.5f, 0.7f, 1.0f};
-constexpr glm::vec3 SKYBOX_COLOR_BOTTOM = {1.0f, 1.0f, 1.0f};
+const glm::vec3 SKYBOX_COLOR_TOP = {0.5f, 0.7f, 1.0f};
+const glm::vec3 SKYBOX_COLOR_BOTTOM = {1.0f, 1.0f, 1.0f};
 
 glm::vec3 Scene::ray_color(const Ray& ray, int bounces_left)
 {
@@ -67,10 +67,10 @@ glm::vec3 Scene::ray_color(const Ray& ray, int bounces_left)
         return glm::vec3(0.0f, 0.0f, 0.0f);
 
     HitInfo info;
-    if (ray_cast(ray, 0.0f, 1000.0f, info))
+    if (ray_cast(ray, 0.01f, 1000.0f, info))
     {
         // do another ray reflected with variance for diffuse
-        glm::vec3 target = info.point + info.normal + glm::abs(glm::sphericalRand(1.0f));
+        glm::vec3 target = info.point + info.normal + glm::ballRand(1.0f);
         return ray_color(Ray(info.point, target - info.point), bounces_left - 1) / 2.0f;
     }
 
@@ -82,7 +82,8 @@ void Scene::render_image()
 {
     for (int j = m_height - 1; j >= 0; j--)
     {
-        printf("Scanlines remaining: %i\n", j + 1);
+        printf("\rScanlines remaining: %i ", j + 1);
+        fflush(stdout);
         for (int i = 0; i < m_width; i++)
         {
             glm::vec3 color = {0.0f, 0.0f, 0.0f};
@@ -105,5 +106,5 @@ void Scene::render_image()
         }
     }
 
-    printf("Rendered %s\n", m_image_filename);
+    printf("\nRendered %s\n", m_image_filename);
 }

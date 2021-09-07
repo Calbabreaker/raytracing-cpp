@@ -1,6 +1,6 @@
 # Makefile to make it a bit easier to build on unix
 
-BUILD_TYPE := Debug
+BUILD_TYPE := Release
 
 .PHONY: run clean build/bin/*
 
