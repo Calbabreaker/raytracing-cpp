@@ -8,7 +8,19 @@ int main()
     srand(time(0));
 
     Scene scene;
-    scene.add_object(std::make_unique<SceneSphere>(glm::vec3(0.0f, 0.0f, -1.0f), 0.5f));
-    scene.add_object(std::make_unique<SceneSphere>(glm::vec3(0.0f, -100.5f, 0.0f), 100.0f));
+
+    auto material_ground = std::make_shared<DiffuseMaterial>(glm::vec3(0.0f, 0.7f, 0.5f));
+    auto material_diffuse = std::make_shared<DiffuseMaterial>(glm::vec3(0.5f, 0.5f, 0.8f));
+    auto material_metal1 = std::make_shared<MetalMaterial>(glm::vec3(0.5f, 0.4f, 0.2f));
+    auto material_metal2 = std::make_shared<MetalMaterial>(glm::vec3(0.3f, 0.3f, 0.3f));
+
+    scene.add_object(
+        std::make_unique<Sphere>(glm::vec3(0.0f, -100.5f, 0.0f), 100.0f, material_ground));
+    scene.add_object(
+        std::make_unique<Sphere>(glm::vec3(0.0f, 0.0f, -1.0f), 0.5f, material_diffuse));
+    scene.add_object(
+        std::make_unique<Sphere>(glm::vec3(-1.0f, 0.0f, -1.0f), 0.5f, material_metal1));
+    scene.add_object(std::make_unique<Sphere>(glm::vec3(1.0f, 0.0f, -1.0f), 0.5f, material_metal2));
+
     scene.render_image();
 }

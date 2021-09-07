@@ -1,39 +1,10 @@
 #include "scene.h"
 
 #include <glm/gtc/random.hpp>
-#include <glm/gtx/norm.hpp>
-
-bool SceneSphere::ray_cast(const Ray& ray, float dist_min, float dist_max, HitInfo& info) const
-{
-    glm::vec3 oc = ray.origin - m_center;
-    float a = glm::length2(ray.direction);
-    float half_b = dot(oc, ray.direction);
-    float c = glm::length2(oc) - m_radius * m_radius;
-    float discriminant = half_b * half_b - a * c;
-
-    if (discriminant < 0.0f)
-        return false;
-
-    float sqrtd = glm::sqrt(discriminant);
-
-    // find the nearest distance that lies in the acceptable range.
-    info.dist = (-half_b - sqrtd) / a;
-    if (info.dist < dist_min || info.dist > dist_max)
-    {
-        info.dist = (-half_b + sqrtd) / a;
-        if (info.dist < dist_min || info.dist > dist_max)
-            return false;
-    }
-
-    info.point = ray.at(info.dist);
-    glm::vec3 outward_normal = (info.point - m_center) / m_radius;
-    info.set_face_normal(ray, outward_normal);
-    return true;
-}
 
 // TODO use cli arguments
 Scene::Scene()
-    : m_width(640), m_height(360), m_samples_per_pixel(16), m_max_bounces(32),
+    : m_width(640), m_height(360), m_samples_per_pixel(32), m_max_bounces(50),
       m_camera(float(m_width) / float(m_height), 1.0f), m_image_filename("output.ppm")
 {
     m_image_file = fopen(m_image_filename, "w");
@@ -69,9 +40,12 @@ glm::vec3 Scene::ray_color(const Ray& ray, int bounces_left)
     HitInfo info;
     if (ray_cast(ray, 0.01f, 1000.0f, info))
     {
-        // do another ray reflected with variance for diffuse
-        glm::vec3 target = info.point + info.normal + glm::ballRand(1.0f);
-        return ray_color(Ray(info.point, target - info.point), bounces_left - 1) / 2.0f;
+        Ray ray_scattered;
+        glm::vec3 attenuation;
+        if (info.material->scatter(ray, info, ray_scattered, attenuation))
+            return attenuation * ray_color(ray_scattered, bounces_left - 1);
+        else
+            return glm::vec3(0.0f, 0.0f, 0.0f);
     }
 
     float color_scale = (ray.direction.y + 1.0f) / 2.0f;

@@ -5,6 +5,7 @@
 
 struct Ray
 {
+    Ray() {}
     Ray(const glm::vec3& p_origin, const glm::vec3& p_direction)
         : origin(p_origin), direction(glm::normalize(p_direction))
     {
@@ -12,9 +13,11 @@ struct Ray
 
     glm::vec3 at(float dist) const { return origin + dist * direction; }
 
-    glm::vec3 origin;
-    glm::vec3 direction;
+    glm::vec3 origin = {0.0f, 0.0f, 0.0f};
+    glm::vec3 direction = {0.0f, 0.0f, 0.0f};
 };
+
+class Material;
 
 struct HitInfo
 {
@@ -22,6 +25,7 @@ struct HitInfo
     glm::vec3 normal;
     float dist;
     bool front_face;
+    Material* material;
 
     void set_face_normal(const Ray& ray, const glm::vec3& outward_normal);
 };

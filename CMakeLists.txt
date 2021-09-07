@@ -20,6 +20,8 @@ add_executable(${PROJECT_NAME}
     src/main.cpp
     src/util.cpp
     src/scene.cpp
+    src/material.cpp
+    src/object.cpp
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:DEBUG>")

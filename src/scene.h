@@ -1,35 +1,17 @@
 #pragma once
 
+#include "material.h"
+#include "object.h"
 #include "util.h"
 
-#include <memory>
 #include <vector>
-
-class SceneObject
-{
-public:
-    // returns true if ray hits object
-    virtual bool ray_cast(const Ray& ray, float dist_min, float dist_max, HitInfo& info) const = 0;
-};
-
-class SceneSphere : public SceneObject
-{
-public:
-    SceneSphere(const glm::vec3& center, float radius) : m_center(center), m_radius(radius) {}
-
-    bool ray_cast(const Ray& ray, float dist_min, float dist_max, HitInfo& info) const override;
-
-private:
-    glm::vec3 m_center;
-    float m_radius;
-};
 
 class Scene
 {
 public:
     Scene();
 
-    void add_object(std::unique_ptr<SceneObject>&& object)
+    void add_object(std::unique_ptr<Object>&& object)
     {
         m_objects.emplace_back(std::move(object));
     };
@@ -45,7 +27,7 @@ private:
     int m_max_bounces;
     Camera m_camera;
 
-    std::vector<std::unique_ptr<SceneObject>> m_objects;
+    std::vector<std::unique_ptr<Object>> m_objects;
 
     FILE* m_image_file;
     const char* m_image_filename;
