@@ -17,3 +17,9 @@ Ray Camera::get_ray(float u, float v) const
 {
     return Ray(m_origin, m_lower_left_corner + u * m_horizontal + v * m_vertical - m_origin);
 }
+
+void HitInfo::set_face_normal(const Ray& ray, const glm::vec3& outward_normal)
+{
+    front_face = glm::dot(ray.direction, outward_normal) < 0.0f;
+    normal = front_face ? outward_normal : -outward_normal;
+}

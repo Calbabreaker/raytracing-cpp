@@ -5,16 +5,6 @@
 #include <memory>
 #include <vector>
 
-struct HitInfo
-{
-    glm::vec3 point;
-    glm::vec3 normal;
-    float dist;
-    bool front_face;
-
-    void set_face_normal(const Ray& ray, const glm::vec3& outward_normal);
-};
-
 class SceneObject
 {
 public:
@@ -45,13 +35,14 @@ public:
     };
 
     bool ray_cast(const Ray& ray, float dist_min, float dist_max, HitInfo& info);
-    glm::vec3 ray_color(const Ray& ray);
+    glm::vec3 ray_color(const Ray& ray, int bounces_left);
     void render_image();
 
 private:
     int m_width;
     int m_height;
     int m_samples_per_pixel;
+    int m_max_bounces;
     Camera m_camera;
 
     std::vector<std::unique_ptr<SceneObject>> m_objects;

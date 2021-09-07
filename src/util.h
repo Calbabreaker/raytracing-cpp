@@ -16,6 +16,16 @@ struct Ray
     glm::vec3 direction;
 };
 
+struct HitInfo
+{
+    glm::vec3 point;
+    glm::vec3 normal;
+    float dist;
+    bool front_face;
+
+    void set_face_normal(const Ray& ray, const glm::vec3& outward_normal);
+};
+
 class Camera
 {
 public:
