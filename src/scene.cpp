@@ -5,7 +5,7 @@
 // TODO use cli arguments
 Scene::Scene()
     : m_width(640), m_height(360), m_samples_per_pixel(32), m_max_bounces(50),
-      m_camera(float(m_width) / float(m_height), 1.0f), m_image_filename("output.ppm")
+      m_camera({ -2,2,1 }, { 0,0,-1 }, 40.0f, float(m_width) / float(m_height)), m_image_filename("output.ppm")
 {
     m_image_file = fopen(m_image_filename, "w");
     if (!m_image_file)

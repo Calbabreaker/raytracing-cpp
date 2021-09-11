@@ -1,6 +1,6 @@
 # CPU Raytracing
 
-Does raycasting on the CPU and outputs an image.
+Does raycasting (techically path tracing here) on the CPU and outputs an image.
 
 ## Building
 

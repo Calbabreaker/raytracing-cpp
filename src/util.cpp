@@ -2,20 +2,27 @@
 
 #include <stdlib.h>
 
-Camera::Camera(float aspect_ratio, float focal_length)
+Camera::Camera(const glm::vec3& position, const glm::vec3& lookat, float fov, float aspect_ratio)
+    : m_position(position)
 {
-    float viewport_height = 2.0f;
+
+    float h = glm::tan(glm::radians(fov) / 2.0f);
+    float viewport_height = h * 2.0f;
     float viewport_width = viewport_height * aspect_ratio;
 
-    m_horizontal = {viewport_width, 0.0f, 0.0f};
-    m_vertical = {0.0f, viewport_height, 0.0f};
-    m_lower_left_corner =
-        m_origin - m_horizontal / 2.0f - m_vertical / 2.0f - glm::vec3(0, 0, focal_length);
+    const glm::vec3 up = {0.0f, 1.0f, 0.0f};
+    glm::vec3 w = glm::normalize(m_position - lookat);
+    glm::vec3 u = glm::normalize(glm::cross(up, w));
+    glm::vec3 v = glm::cross(w, u);
+
+    m_horizontal = viewport_width * u;
+    m_vertical = viewport_height * v;
+    m_lower_left_corner = m_position - m_horizontal / 2.0f - m_vertical / 2.0f - w;
 }
 
 Ray Camera::get_ray(float u, float v) const
 {
-    return Ray(m_origin, m_lower_left_corner + u * m_horizontal + v * m_vertical - m_origin);
+    return Ray(m_position, m_lower_left_corner + u * m_horizontal + v * m_vertical - m_position);
 }
 
 void HitInfo::set_face_normal(const Ray& ray, const glm::vec3& outward_normal)

@@ -33,12 +33,13 @@ struct HitInfo
 class Camera
 {
 public:
-    Camera(float aspect_ratio, float focal_length);
+    // fov is verticle field-of-view in degrees
+    Camera(const glm::vec3& position, const glm::vec3& lookat, float fov, float aspect_ratio);
 
     Ray get_ray(float u, float v) const;
 
 private:
-    glm::vec3 m_origin = {0.0f, 0.0f, 0.0f};
+    glm::vec3 m_position;
     glm::vec3 m_lower_left_corner;
     glm::vec3 m_horizontal;
     glm::vec3 m_vertical;
