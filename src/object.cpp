@@ -2,7 +2,7 @@
 
 #include <glm/gtx/norm.hpp>
 
-bool Sphere::ray_cast(const Ray& ray, float dist_min, float dist_max, HitInfo& info) const
+bool Sphere::ray_intersect(const Ray& ray, float dist_min, float dist_max, HitInfo& info) const
 {
     glm::vec3 oc = ray.origin - m_position;
     float a = glm::length2(ray.direction);

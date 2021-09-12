@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
-project(Raytracing LANGUAGES CXX)
+project(Raytracing LANGUAGES CXX C)
 
 # some config
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -22,6 +22,8 @@ endif(CCACHE_FOUND)
 
 # libraries
 add_subdirectory(lib/glm)
+add_subdirectory(lib/stb)
+find_package(Threads)
 
 # output executable
 add_executable(${PROJECT_NAME} 
@@ -34,6 +36,7 @@ add_executable(${PROJECT_NAME}
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:DEBUG>")
 target_compile_definitions(${PROJECT_NAME} PRIVATE "$<$<CONFIG:RELEASE>:RELEASE>")
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 # link with libraries
-target_link_libraries(${PROJECT_NAME} glm)
+target_link_libraries(${PROJECT_NAME} glm stb Threads::Threads)
