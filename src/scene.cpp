@@ -12,12 +12,11 @@ Scene::Scene() : m_camera()
     if (n_cores != 0)
         m_options.n_threads = n_cores;
 
-    // m_options.n_threads = 1;
-
     m_camera.set_props({-2, 2, 1}, {0, 0, -1}, 40.0f,
                        float(m_options.width) / float(m_options.height), 0.0f);
     m_options.width = 640;
     m_options.height = 360;
+    m_options.samples_per_pixel = 32;
 }
 
 bool Scene::ray_cast(const Ray& ray, float dist_min, float dist_max, HitInfo& info)
@@ -55,7 +54,7 @@ glm::vec3 Scene::ray_color(const Ray& ray, int bounces_left)
     return glm::mix(SKYBOX_COLOR_BOTTOM, SKYBOX_COLOR_TOP, color_scale);
 }
 
-void Scene::render_tile( Tile tile)
+void Scene::render_tile(Tile tile)
 {
     for (int y = tile.point1.y; y < tile.point2.y; y++)
     {
@@ -64,8 +63,8 @@ void Scene::render_tile( Tile tile)
             glm::vec3 color = {0.0f, 0.0f, 0.0f};
             for (int i = 0; i < m_options.samples_per_pixel; i++)
             {
-                float u = (x + glm::linearRand(0.0f, 1.0f)) / (m_options.width - 1);
-                float v = (y + glm::linearRand(0.0f, 1.0f)) / (m_options.height - 1);
+                float u = (x + random_float()) / (m_options.width - 1);
+                float v = (y + random_float()) / (m_options.height - 1);
 
                 Ray ray = m_camera.get_ray(u, v);
                 color += ray_color(ray, m_options.max_bounces);
@@ -90,8 +89,9 @@ void Scene::render_worker()
 
             tile = &m_render_tiles[m_current_tile_index];
             m_current_tile_index++;
-            printf("Rendering tile %i/%li at %i,%i\n", m_current_tile_index, m_render_tiles.size(),
+            printf("\rRendering tile %i/%li at %i,%i ", m_current_tile_index, m_render_tiles.size(),
                    tile->point1.x, tile->point1.y);
+            fflush(stdout);
         }
 
         render_tile(*tile);
@@ -129,12 +129,12 @@ void Scene::start_render()
     for (std::thread& thread : m_threads)
         thread.join();
 
-    printf("Finshed rendering. Saving image...\n");
+    printf("\nFinshed rendering. Saving image...\n");
     write_image(m_options.output_file, m_options.width, m_options.height, m_image_buffer);
     delete[] m_image_buffer;
+    printf("Saved %s\n", m_options.output_file);
 
     auto end_time = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> delta = end_time - start_time;
-
-    printf("\nSaved %s Took %f seconds\n", m_options.output_file, delta.count() / 1000.0f);
+    printf("Took %f seconds\n", delta.count() / 1000.0f);
 }

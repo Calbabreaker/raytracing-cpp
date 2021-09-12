@@ -43,7 +43,7 @@ public:
 private:
     bool ray_cast(const Ray& ray, float dist_min, float dist_max, HitInfo& info);
     glm::vec3 ray_color(const Ray& ray, int bounces_left);
-    void render_tile( Tile tile);
+    void render_tile(Tile tile);
 
     void render_worker();
 

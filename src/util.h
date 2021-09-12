@@ -1,7 +1,11 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include <cstdlib>
+#include <ctime>
 #include <stdio.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtx/norm.hpp>
 
 struct Ray
 {
@@ -49,3 +53,30 @@ private:
 };
 
 void write_image(const char* filename, int width, int height, glm::u8vec3* imagebuffer);
+
+inline float random_float()
+{
+    static uint32_t seed = time(NULL);
+    return rand_r(&seed) / float(RAND_MAX);
+}
+
+inline float random_float(float min, float max)
+{
+    return min + (max - min) * random_float();
+}
+
+inline glm::vec3 random_unit_vector()
+{
+    return glm::normalize(
+        glm::vec3(random_float(-1.0f, 1.0f), random_float(-1.0f, 1.0f), random_float(-1.0f, 1.0f)));
+}
+
+inline glm::vec3 random_unit_disk()
+{
+    while (true)
+    {
+        glm::vec3 point = {random_float(-1.0f, 1.0f), random_float(-1.0f, 1.0f), 0.0f};
+        if (glm::length2(point) < 1.0f)
+            return point;
+    }
+}

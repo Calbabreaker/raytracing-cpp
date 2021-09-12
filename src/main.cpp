@@ -1,12 +1,9 @@
 #include "scene.h"
 
-#include <glm/gtc/random.hpp>
 #include <glm/gtx/norm.hpp>
 
 int main(int argc, char** argv)
 {
-    srand(time(0));
-
     Scene scene;
 
     auto material_ground = std::make_shared<DiffuseMaterial>(glm::vec3(0.0f, 0.7f, 0.5f));
