@@ -6,7 +6,7 @@
 #include <glm/gtc/random.hpp>
 #include <ratio>
 
-Scene::Scene() : m_camera()
+Scene::Scene()
 {
     int n_cores = std::thread::hardware_concurrency();
     if (n_cores != 0)
@@ -16,7 +16,7 @@ Scene::Scene() : m_camera()
                        float(m_options.width) / float(m_options.height), 0.0f);
     m_options.width = 640;
     m_options.height = 360;
-    m_options.samples_per_pixel = 32;
+    m_options.samples_per_pixel = 1;
 }
 
 bool Scene::ray_cast(const Ray& ray, float dist_min, float dist_max, HitInfo& info)
@@ -31,8 +31,8 @@ bool Scene::ray_cast(const Ray& ray, float dist_min, float dist_max, HitInfo& in
     return closest_dist != dist_max;
 }
 
-const glm::vec3 SKYBOX_COLOR_TOP = {0.5f, 0.7f, 1.0f};
-const glm::vec3 SKYBOX_COLOR_BOTTOM = {1.0f, 1.0f, 1.0f};
+constexpr glm::vec3 SKYBOX_COLOR_TOP = {0.5f, 0.7f, 1.0f};
+constexpr glm::vec3 SKYBOX_COLOR_BOTTOM = {1.0f, 1.0f, 1.0f};
 
 glm::vec3 Scene::ray_color(const Ray& ray, int bounces_left)
 {
@@ -119,11 +119,11 @@ void Scene::start_render()
 
     m_current_tile_index = 0;
 
+    printf("Rendering with %i threads...\n", m_options.n_threads);
+
     // create threads
     for (int i = 0; i < m_options.n_threads; i++)
         m_threads.emplace_back(std::thread(&Scene::render_worker, this));
-
-    printf("Initilized %i threads. Rendering...\n", m_options.n_threads);
 
     // wait for threads to finish
     for (std::thread& thread : m_threads)

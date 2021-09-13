@@ -14,7 +14,8 @@ public:
     }
 
     // returns true if ray hits object
-    virtual bool ray_intersect(const Ray& ray, float dist_min, float dist_max, HitInfo& info) const = 0;
+    virtual bool ray_intersect(const Ray& ray, float dist_min, float dist_max,
+                               HitInfo& info) const = 0;
 
 protected:
     glm::vec3 m_position;
@@ -29,7 +30,8 @@ public:
     {
     }
 
-    bool ray_intersect(const Ray& ray, float dist_min, float dist_max, HitInfo& info) const override;
+    bool ray_intersect(const Ray& ray, float dist_min, float dist_max,
+                       HitInfo& info) const override;
 
 private:
     float m_radius;
