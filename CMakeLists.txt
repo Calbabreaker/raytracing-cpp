@@ -2,27 +2,16 @@ cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 project(Raytracing LANGUAGES CXX C)
 
 # some config
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) # set executable directory as build/bin
 
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fcolor-diagnostics")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcolor-diagnostics")
-elseif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fdiagnostics-color=always")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
+# use yacpm
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/yacpm.cmake")
+    file(DOWNLOAD "https://github.com/Calbabreaker/yacpm/raw/v1/yacpm.cmake" "${CMAKE_BINARY_DIR}/yacpm.cmake")
 endif()
 
-find_program(CCACHE_FOUND ccache)
-if(CCACHE_FOUND)
-    message(STATUS "Found ccache found and enabled")
-    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
-    set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache) 
-endif(CCACHE_FOUND)
+include(${CMAKE_BINARY_DIR}/yacpm.cmake)
+yacpm_use_extended()
 
-# libraries
-add_subdirectory(lib/glm)
-add_subdirectory(lib/stb)
 find_package(Threads)
 
 # output executable

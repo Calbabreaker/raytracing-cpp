@@ -1,5 +1,7 @@
 #include "util.h"
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+
 #include <glm/gtc/random.hpp>
 #include <stb_image_write.h>
 #include <stdlib.h>

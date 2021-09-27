@@ -16,7 +16,7 @@ Scene::Scene()
                        float(m_options.width) / float(m_options.height), 0.0f);
     m_options.width = 640;
     m_options.height = 360;
-    m_options.samples_per_pixel = 1;
+    m_options.samples_per_pixel = 32;
 }
 
 bool Scene::ray_cast(const Ray& ray, float dist_min, float dist_max, HitInfo& info)
