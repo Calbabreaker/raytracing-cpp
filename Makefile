@@ -5,7 +5,7 @@ BUILD_TYPE := Release
 .PHONY: run clean build/bin/*
 
 build/bin/*: build/Makefile
-	cd build && make
+	cmake --build build
 
 build/Makefile: 
 	mkdir build -p

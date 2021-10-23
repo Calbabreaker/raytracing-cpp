@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 project(Raytracing LANGUAGES CXX C)
 
-# some config
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) # set executable directory as build/bin
-
 # use yacpm
 if(NOT EXISTS "${CMAKE_BINARY_DIR}/yacpm.cmake")
     file(DOWNLOAD "https://github.com/Calbabreaker/yacpm/raw/v1/yacpm.cmake" "${CMAKE_BINARY_DIR}/yacpm.cmake")
